@@ -1,10 +1,5 @@
 # 🍲 FoodWala — Bengaluru Food Discovery & Delivery Platform
 
-[![Live Demo](https://img.shields.io/badge/Live%20Demo-GitHub%20Pages-brightgreen?logo=github)](https://vishnu6301382491-dev.github.io/Foodwala/)
-[![Node.js](https://img.shields.io/badge/Backend-Node.js%20%7C%20Express-green?logo=node.js)](https://nodejs.org/)
-[![Database](https://img.shields.io/badge/Database-MySQL%20%28fudwala%29-blue?logo=mysql)](https://www.mysql.com/)
-[![Security](https://img.shields.io/badge/Auth-Argon2id%20%7C%20OWASP-red)](https://owasp.org/)
-[![Payments](https://img.shields.io/badge/Payments-Razorpay%20Sandbox-blue?logo=razorpay)](https://razorpay.com/)
 
 **FoodWala** is an enterprise-grade food discovery and delivery web application designed for Bengaluru, India. It combines a responsive frontend (hosted on GitHub Pages), a high-performance Node.js/Express backend, and a relational MySQL database (`fudwala`) acting as the single source of truth for all operational data with strictly parameterized prepared statements.
 
