@@ -10,11 +10,7 @@
 
 ---
 
-## 🌐 Live Application Links
 
-- **Frontend (GitHub Pages)**: [https://vishnu6301382491-dev.github.io/Foodwala/](https://vishnu6301382491-dev.github.io/Foodwala/)
-- **GitHub Repository**: [https://github.com/vishnu6301382491-dev/Foodwala](https://github.com/vishnu6301382491-dev/Foodwala)
-- **Local Backend**: `http://localhost:5000` (Health Check: `http://localhost:5000/api/health/db`)
 
 ---
 
