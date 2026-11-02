@@ -1,0 +1,13 @@
+Foodwala-Updated-Project.zip
+*.zip
+*.pptx
+fudwala_complete_export.sql
+.env
+server/.env
+build/
+bin/
+target/
+.git
+.gemini
+node_modules
+server/node_modules

@@ -6,12 +6,11 @@
   "scripts": {
     "start": "node server/server.js",
     "test": "node scripts/test_whatsapp_full_suite.js && node scripts/test_whatsapp_webhook.js",
-    "build": "npm install --prefix server",
     "postinstall": "npm install --prefix server",
     "verify": "node scripts/verify-deploy.js"
   },
   "engines": {
-    "node": "20.x"
+    "node": ">=20.x"
   },
   "dependencies": {
     "@node-rs/argon2": "^2.2.2",
