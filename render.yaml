@@ -1,0 +1,62 @@
+services:
+  - type: web
+    name: foodwala-backend
+    runtime: node
+    plan: free
+    region: oregon
+    rootDir: server
+    buildCommand: npm install
+    startCommand: npm start
+    healthCheckPath: /api/health
+    envVars:
+      - key: NODE_ENV
+        value: production
+      - key: CORS_ORIGINS
+        value: https://ramesh2200.github.io,https://foodwala-delivery.vercel.app,https://rameswork.online,http://localhost:5500,http://127.0.0.1:5500
+      - key: FRONTEND_URL
+        value: https://foodwala-delivery.vercel.app
+      - key: DB_HOST
+        sync: false
+      - key: DB_PORT
+        value: 3306
+      - key: DB_USER
+        sync: false
+      - key: DB_PASSWORD
+        sync: false
+      - key: DB_NAME
+        value: fudwala
+      - key: DB_SSL
+        value: "true"
+      - key: JWT_SECRET
+        generateValue: true
+      - key: ADMIN_PASSWORD
+        sync: false
+      - key: OTP_DEV_MODE
+        value: "true"
+      - key: SMS_PROVIDER
+        value: fast2sms
+      - key: FAST2SMS_API_KEY
+        sync: false
+      # WhatsApp Cloud API & AI Customer Support Configuration
+      - key: WHATSAPP_PHONE_NUMBER_ID
+        sync: false
+      - key: WHATSAPP_ACCESS_TOKEN
+        sync: false
+      - key: META_ACCESS_TOKEN
+        sync: false
+      - key: WHATSAPP_BUSINESS_ACCOUNT_ID
+        sync: false
+      - key: WHATSAPP_APP_SECRET
+        sync: false
+      - key: WHATSAPP_VERIFY_TOKEN
+        sync: false
+      - key: SUPPORT_PHONE_NUMBER
+        sync: false
+      - key: AI_PROVIDER
+        value: gemini
+      - key: AI_API_KEY
+        sync: false
+      - key: AI_MODEL_NAME
+        value: gemini-3.8-flash
+      - key: META_GRAPH_API_VERSION
+        value: v21.0

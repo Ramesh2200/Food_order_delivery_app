@@ -1,11 +1,24 @@
 # 🍲 FoodWala — Bengaluru Food Discovery & Delivery Platform
 
+[![Live Demo (Vercel)](https://img.shields.io/badge/Live%20Demo-Vercel-black?logo=vercel)](https://foodwala-delivery.vercel.app/)
+[![GitHub Pages](https://img.shields.io/badge/Live%20Demo-GitHub%20Pages-brightgreen?logo=github)](https://ramesh2200.github.io/Food_order_delivery_app/)
+[![Node.js](https://img.shields.io/badge/Backend-Node.js%20%7C%20Express-green?logo=node.js)](https://nodejs.org/)
+[![Database](https://img.shields.io/badge/Database-MySQL%20%28fudwala%29-blue?logo=mysql)](https://www.mysql.com/)
+[![Security](https://img.shields.io/badge/Auth-Argon2id%20%7C%20OWASP-red)](https://owasp.org/)
+[![Payments](https://img.shields.io/badge/Payments-Razorpay%20Sandbox-blue?logo=razorpay)](https://razorpay.com/)
 
-**FoodWala** is an enterprise-grade food discovery and delivery web application designed for Bengaluru, India. It combines a responsive frontend (hosted on GitHub Pages), a high-performance Node.js/Express backend, and a relational MySQL database (`fudwala`) acting as the single source of truth for all operational data with strictly parameterized prepared statements.
+**FoodWala** is an enterprise-grade food discovery and delivery web application designed for Bengaluru, India. It combines a responsive frontend (hosted on Vercel & GitHub Pages), a high-performance Node.js/Express backend (available as Vercel Serverless API or Render Web Service), and a relational MySQL database (`fudwala`) acting as the single source of truth for all operational data with strictly parameterized prepared statements.
 
 ---
 
+## 🌐 Live Application Links
 
+- **Live Frontend (Vercel)**: [https://foodwala-delivery.vercel.app/](https://foodwala-delivery.vercel.app/)
+- **Live Frontend (GitHub Pages)**: [https://ramesh2200.github.io/Food_order_delivery_app/](https://ramesh2200.github.io/Food_order_delivery_app/)
+- **GitHub Repository**: [https://github.com/Ramesh2200/Food_order_delivery_app](https://github.com/Ramesh2200/Food_order_delivery_app)
+- **Developer Portfolio**: [https://rameswork.online](https://rameswork.online)
+- **Developer GitHub Profile**: [https://github.com/Ramesh2200](https://github.com/Ramesh2200)
+- **Local Backend**: `http://localhost:3000` (Health Check: `http://localhost:3000/api/health`)
 
 ---
 
@@ -168,7 +181,7 @@ GitHub Pages serves only static frontend files (HTML/CSS/JS). To enable live dat
 ### Step 2: Deploy Backend to Render
 1. Sign up at [Render.com](https://render.com).
 2. Click **New +** $\rightarrow$ **Web Service**.
-3. Connect your public GitHub repository: `https://github.com/vishnu6301382491-dev/Foodwala`.
+3. Connect your public GitHub repository: `https://github.com/Ramesh2200/Food_order_delivery_app`.
 4. Configure service settings:
    - **Root Directory**: `server`
    - **Environment**: `Node`
@@ -177,7 +190,7 @@ GitHub Pages serves only static frontend files (HTML/CSS/JS). To enable live dat
 5. In **Environment Variables**, add:
    - `NODE_ENV`: `production`
    - `PORT`: `10000`
-   - `FRONTEND_URL`: `https://vishnu6301382491-dev.github.io`
+   - `FRONTEND_URL`: `https://foodwala-delivery.vercel.app`
    - `DB_HOST`: *(Your cloud MySQL host)*
    - `DB_PORT`: *(Your cloud MySQL port)*
    - `DB_USER`: *(Your cloud MySQL user)*
@@ -193,21 +206,20 @@ GitHub Pages serves only static frontend files (HTML/CSS/JS). To enable live dat
 6. Click **Deploy Web Service**. Render will assign a public HTTPS URL, for example:
    `https://foodwala-backend.onrender.com`
 
-### Step 3: Connect Frontend to Hosted Backend
-1. Open `js/api.js` in your repository.
-2. Locate line ~20:
-   ```javascript
-   const HOSTED_BACKEND_URL = 'https://foodwala-backend.onrender.com';
-   ```
-3. Replace the placeholder with your actual Render/Railway URL.
-4. Commit and push `js/api.js` to GitHub. GitHub Pages will automatically redeploy!
+---
+
+## ⚡ Instant Vercel Deployment
+
+1. Make sure you have the [Vercel CLI](https://vercel.com/cli) installed: `npm i -g vercel`.
+2. Run `vercel --prod` in the project root.
+3. Access your full-stack deployment instantly!
 
 ---
 
 ## 🌐 GitHub Pages Deployment Settings
 
 To ensure GitHub Pages serves your site correctly:
-1. Open your repository on GitHub: `https://github.com/vishnu6301382491-dev/Foodwala`.
+1. Open your repository on GitHub: `https://github.com/Ramesh2200/Food_order_delivery_app`.
 2. Go to **Settings** $\rightarrow$ **Pages** (in the left sidebar).
 3. Under **Build and deployment**:
    - **Source**: `Deploy from a branch`
@@ -215,7 +227,7 @@ To ensure GitHub Pages serves your site correctly:
    - **Folder**: `/ (root)`
 4. Click **Save**.
 5. Your live site will be accessible at:
-   👉 **[https://vishnu6301382491-dev.github.io/Foodwala/](https://vishnu6301382491-dev.github.io/Foodwala/)**
+   👉 **[https://ramesh2200.github.io/Food_order_delivery_app/](https://ramesh2200.github.io/Food_order_delivery_app/)**
 
 ---
 
@@ -299,4 +311,3 @@ GROUP BY c.coupon_id;
 
 ---
 © 2026 FoodWala Inc. All rights reserved.
-# Food_order_delivery_app

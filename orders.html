@@ -1,0 +1,478 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <link rel="icon" type="image/x-icon" href="./favicon.ico">
+  <link rel="icon" type="image/png" sizes="32x32" href="./favicon-32x32.png">
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>My Orders | FoodWala Bengaluru</title>
+  <link rel="preconnect" href="https://images.unsplash.com" crossorigin>
+  <link rel="dns-prefetch" href="https://images.unsplash.com">
+  <!-- Bootstrap 5 CSS -->
+  <link href="./assets/vendor/bootstrap/css/bootstrap.min.css" rel="stylesheet">
+  <!-- Bootstrap Icons -->
+  <link rel="stylesheet" href="./assets/vendor/bootstrap-icons/bootstrap-icons.min.css">
+  <!-- Custom CSS -->
+  <link rel="stylesheet" href="./css/style.min.css">
+  <link rel="stylesheet" href="./css/ui.css">
+  <link rel="stylesheet" href="./css/animations-3d.css">
+  <script src="./js/theme.js"></script>
+</head>
+<body class="fw-orders-page d-flex flex-column min-vh-100">
+
+  <!-- NAVBAR -->
+  <nav class="navbar navbar-expand-lg navbar-light bg-white sticky-top shadow-sm py-2">
+    <div class="container">
+      <a class="navbar-brand d-flex align-items-center gap-2 fw-bold text-danger fs-4 text-decoration-none" href="./index.html">
+        <div class="bg-danger text-white rounded-3 d-flex align-items-center justify-content-center" style="width: 36px; height: 36px;">
+          <i class="bi bi-bag-heart-fill fs-5"></i>
+        </div>
+        <span>Food<span class="text-dark">Wala</span></span>
+      </a>
+
+      <button class="navbar-toggler border-0" type="button" data-bs-toggle="collapse" data-bs-target="#navbarContent">
+        <span class="navbar-toggler-icon"></span>
+      </button>
+
+      <div class="collapse navbar-collapse" id="navbarContent">
+        <!-- Location Picker Button (No fake default) -->
+        <div class="d-flex align-items-center ms-lg-4 my-2 my-lg-0">
+          <button type="button" class="btn btn-light btn-sm rounded-pill px-3 py-2 d-flex align-items-center gap-2 border" data-bs-toggle="modal" data-bs-target="#locationModal" title="Select Delivery Location">
+            <i class="bi bi-geo-alt-fill text-danger fs-5"></i>
+            <div class="text-start lh-1" id="navbar-location-display">
+              <span class="fw-bold text-dark text-truncate d-inline-block" style="max-width: 140px;">Select Location</span>
+              <small class="text-muted d-block" style="font-size: 0.75rem;">Click to set location</small>
+            </div>
+            <i class="bi bi-chevron-down text-muted ms-1 small"></i>
+          </button>
+        </div>
+
+        <ul class="navbar-nav ms-auto align-items-center gap-lg-3 my-2 my-lg-0">
+          <li class="nav-item">
+            <a class="nav-link fw-semibold px-2 text-dark" href="./index.html">
+              <i class="bi bi-house-door me-1"></i> Home
+            </a>
+          </li>
+          <li class="nav-item">
+            <a class="nav-link fw-semibold px-2 text-dark" href="./restaurants.html">
+              <i class="bi bi-shop me-1"></i> Restaurants
+            </a>
+          </li>
+          <li class="nav-item">
+            <a class="nav-link fw-semibold px-2 text-dark" href="./orders.html">
+              <i class="bi bi-bag-check me-1"></i> Orders
+            </a>
+          </li>
+          <li class="nav-item">
+            <a class="btn btn-outline-danger btn-sm rounded-pill px-3 py-2 position-relative d-flex align-items-center gap-2" href="./cart.html">
+              <i class="bi bi-cart3 fs-6"></i>
+              <span class="fw-bold">Cart</span>
+              <span class="badge bg-danger rounded-pill js-cart-count" style="display: none;">0</span>
+            </a>
+          </li>
+          <!-- Dark / Light Theme Switcher Button -->
+          <li class="nav-item">
+            <button type="button" class="btn btn-sm rounded-pill px-3 py-2 fw-bold d-flex align-items-center gap-1.5 theme-toggle-btn" id="fw-theme-toggle-btn" title="Toggle Dark/Light Mode">
+              <i class="bi bi-moon-stars-fill theme-icon text-warning"></i>
+              <span class="theme-toggle-label d-none d-xl-inline">Dark</span>
+            </button>
+          </li>
+          <!-- User Slot (Populated dynamically from foodwala_current_user; default is Login) -->
+          <li class="nav-item ms-lg-2" id="navbar-user-slot">
+            <div class="d-flex align-items-center gap-2">
+              <a href="./login.html" class="btn btn-outline-danger btn-sm px-3 py-2 rounded-pill fw-semibold d-flex align-items-center gap-1">
+                <i class="bi bi-person"></i>
+                <span>Login</span>
+              </a>
+              <a href="./register.html" class="btn btn-danger btn-sm px-3 py-2 rounded-pill fw-semibold">Sign Up</a>
+            </div>
+          </li>
+        </ul>
+      </div>
+    </div>
+  </nav>
+
+  <!-- Location Selection Modal -->
+  <div class="modal fade" id="locationModal" tabindex="-1" aria-labelledby="locationModalLabel" aria-hidden="true">
+    <div class="modal-dialog modal-dialog-centered modal-dialog-scrollable">
+      <div class="modal-content border-0 shadow-lg rounded-4 overflow-hidden">
+        <div class="modal-header bg-danger text-white border-0 py-3">
+          <h5 class="modal-title fw-bold" id="locationModalLabel">
+            <i class="bi bi-geo-alt-fill me-2"></i>Select Delivery Location
+          </h5>
+          <button type="button" class="btn-close btn-close-white" data-bs-dismiss="modal" aria-label="Close"></button>
+        </div>
+        <div class="modal-body p-0" id="location-options-list">
+          <!-- Populated by FoodWalaApp.bindLocationModalEvents() -->
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <!-- MAIN CONTAINER -->
+  <main class="container my-4 flex-grow-1">
+    
+    <div class="d-flex align-items-center justify-content-between mb-4">
+      <div>
+        <h2 class="fw-bold text-dark mb-1"><i class="bi bi-bag-check-fill text-danger me-2"></i>My Orders</h2>
+        <p class="text-muted mb-0 small">Track active deliveries & view past food order history</p>
+      </div>
+      <a href="./restaurants.html" class="btn btn-danger btn-sm rounded-pill px-3 py-2 fw-bold">
+        <i class="bi bi-shop me-1"></i> Explore Restaurants
+      </a>
+    </div>
+
+    <div class="row g-4" id="orders-list-container">
+      <!-- Orders dynamically populated -->
+    </div>
+
+  </main>
+
+  <!-- FOOTER -->
+  <footer class="bg-dark text-light pt-5 pb-4 mt-auto border-top border-secondary">
+    <div class="container">
+      <div class="row g-4">
+        <div class="col-lg-4 col-md-6">
+          <div class="d-flex align-items-center gap-2 mb-3">
+            <div class="bg-danger text-white rounded-3 d-flex align-items-center justify-content-center" style="width: 38px; height: 38px;">
+              <i class="bi bi-bag-heart-fill fs-5"></i>
+            </div>
+            <h4 class="text-white fw-bold mb-0">Food<span class="text-danger">Wala</span></h4>
+          </div>
+          <p class="text-muted small mb-3">Bengaluru's premier authentic food discovery and hyper-fast delivery network. Bringing 105+ iconic restaurants and 750+ delicacies straight to your doorstep.</p>
+          <div class="d-flex gap-3 fs-5">
+            <a href="#" class="text-secondary hover-danger"><i class="bi bi-facebook"></i></a>
+            <a href="#" class="text-secondary hover-danger"><i class="bi bi-instagram"></i></a>
+            <a href="#" class="text-secondary hover-danger"><i class="bi bi-twitter-x"></i></a>
+            <a href="#" class="text-secondary hover-danger"><i class="bi bi-linkedin"></i></a>
+          </div>
+        </div>
+
+        <div class="col-lg-2 col-md-6 col-6">
+          <h6 class="text-uppercase fw-bold text-white mb-3">Quick Links</h6>
+          <ul class="list-unstyled small d-flex flex-column gap-2 mb-0">
+            <li><a href="./index.html" class="text-muted text-decoration-none hover-light">Home</a></li>
+            <li><a href="./restaurants.html" class="text-muted text-decoration-none hover-light">All Restaurants</a></li>
+            <li><a href="./orders.html" class="text-muted text-decoration-none hover-light">My Orders</a></li>
+            <li><a href="./cart.html" class="text-muted text-decoration-none hover-light">Cart</a></li>
+            <li><a href="./profile.html" class="text-muted text-decoration-none hover-light">User Profile</a></li>
+            <li><a href="./addresses.html" class="text-muted text-decoration-none hover-light">Saved Addresses</a></li>
+          </ul>
+        </div>
+
+        <div class="col-lg-3 col-md-6 col-6">
+          <h6 class="text-uppercase fw-bold text-white mb-3">Top Bengaluru Areas</h6>
+          <ul class="list-unstyled small d-flex flex-column gap-2 mb-0 text-muted">
+            <li><i class="bi bi-geo-alt text-danger me-1"></i> Koramangala & HSR</li>
+            <li><i class="bi bi-geo-alt text-danger me-1"></i> Indiranagar & MG Road</li>
+            <li><i class="bi bi-geo-alt text-danger me-1"></i> Whitefield & Marathahalli</li>
+            <li><i class="bi bi-geo-alt text-danger me-1"></i> Malleshwaram & Rajajinagar</li>
+            <li><i class="bi bi-geo-alt text-danger me-1"></i> Jayanagar & Basavanagudi</li>
+          </ul>
+        </div>
+
+        <div class="col-lg-3 col-md-6">
+          <h6 class="text-uppercase fw-bold text-white mb-3">Secure Payments</h6>
+          <p class="text-muted small mb-2">100% Secure Checkout powered by Razorpay Test Sandbox and UPI.</p>
+          <div class="d-flex flex-wrap gap-2 align-items-center mb-3">
+            <span class="badge bg-secondary p-2"><i class="bi bi-credit-card me-1"></i> Cards</span>
+            <span class="badge bg-secondary p-2"><i class="bi bi-qr-code me-1"></i> UPI</span>
+            <span class="badge bg-secondary p-2"><i class="bi bi-bank me-1"></i> NetBanking</span>
+            <span class="badge bg-secondary p-2"><i class="bi bi-cash-stack me-1"></i> Cash On Delivery</span>
+          </div>
+          <small class="text-secondary d-block">Razorpay Public Test Key: <code class="text-light">rzp_test_TSA8hQOJIQaDo0</code></small>
+        </div>
+      </div>
+
+      <hr class="border-secondary my-4">
+
+      <div class="d-flex flex-column flex-md-row justify-content-between align-items-center small text-muted">
+        <div>&copy; 2026 FoodWala Inc. All rights reserved. Built with Java Servlets, JSP & Modern Web Architecture.</div>
+        <div class="mt-2 mt-md-0">
+          <span>Bengaluru, Karnataka &bull; 105 Real Restaurants &bull; 756 Menu Items</span>
+        </div>
+      </div>
+    </div>
+  </footer>
+
+  <!-- Bootstrap 5 JS Bundle -->
+  <script src="./assets/vendor/bootstrap/js/bootstrap.bundle.min.js" defer></script>
+  <!-- FoodWala MySQL API & Core JS -->
+    <!-- FoodWala Architecture: Config & Adapters -->
+  <script src="./js/config.js" defer></script>
+  <script src="./js/adapters/mockAdapter.js" defer></script>
+  <script src="./js/adapters/liveAdapter.js" defer></script>
+  <script src="./js/api.js" defer></script>
+  <script src="./js/ui.js" defer></script>
+  <script src="./js/app.js" defer></script>
+  <!-- jsPDF & Receipt Service -->
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/jspdf/2.5.1/jspdf.umd.min.js" defer></script>
+  <script src="./js/receiptService.js" defer></script>
+  <!-- EmailJS Browser SDK & Email Service -->
+  <script src="https://cdn.jsdelivr.net/npm/@emailjs/browser@4/dist/email.min.js" defer></script>
+  <script src="./js/emailService.js" defer></script>
+
+  <script>
+    window.addEventListener('pageshow', (event) => {
+      if (event.persisted && window.FoodWalaApp && FoodWalaApp.Auth && !FoodWalaApp.Auth.isLoggedIn()) {
+        window.location.replace('./login.html?redirect=./orders.html');
+      }
+    });
+
+    document.addEventListener('DOMContentLoaded', () => {
+      if (window.FoodWalaApp && FoodWalaApp.Auth && !FoodWalaApp.Auth.requireAuth('./orders.html')) return;
+      const container = document.getElementById('orders-list-container');
+
+      function formatTimeOnly(dateInput) {
+        if (!dateInput) return '';
+        const d = new Date(dateInput);
+        if (isNaN(d.getTime())) return '';
+        return d.toLocaleTimeString('en-IN', { hour: '2-digit', minute: '2-digit', hour12: true });
+      }
+
+      // Run one-time deduplication cleanup on load
+      if (window.FoodWalaApp && FoodWalaApp.Orders && FoodWalaApp.Orders.deduplicateOrders) {
+        FoodWalaApp.Orders.deduplicateOrders();
+      }
+
+      async function renderOrdersList() {
+        if (window.FoodWalaHealth && typeof window.FoodWalaHealth.checkBackend === 'function') {
+          await window.FoodWalaHealth.checkBackend();
+        }
+        let orders = [];
+        if (window.FoodWalaApp && FoodWalaApp.Orders && typeof FoodWalaApp.Orders.fetchOrders === 'function') {
+          orders = await FoodWalaApp.Orders.fetchOrders();
+        } else if (window.FoodWalaApp && FoodWalaApp.Orders) {
+          orders = FoodWalaApp.Orders.getAllOrders();
+        }
+
+        container.innerHTML = '';
+
+        if (!orders || orders.length === 0) {
+          container.innerHTML = `
+            <div class="col-12 text-center py-5">
+              <div class="bg-white p-5 rounded-4 shadow-sm border">
+                <i class="bi bi-bag-x fs-1 text-danger d-block mb-3"></i>
+                <h4 class="fw-bold text-dark">No orders placed yet</h4>
+                <p class="text-muted small mb-4">Explore 105+ authentic Bengaluru restaurants and order delicious food today!</p>
+                <a href="./restaurants.html" class="btn btn-danger rounded-pill px-4 py-2 fw-bold">
+                  Browse Restaurants
+                </a>
+              </div>
+            </div>
+          `;
+          return;
+        }
+
+        container.innerHTML = orders.map(order => {
+          // Derive status from elapsed time (Phase 4 lifecycle)
+          const statusInfo = FoodWalaApp.Orders.getOrderStatus(order);
+          const isDelivered = statusInfo.status === 'DELIVERED';
+          const isLive = statusInfo.isLive;
+
+          const formattedDate = new Date(order.createdAtMs || order.createdAt).toLocaleDateString('en-IN', {
+            day: 'numeric',
+            month: 'short',
+            year: 'numeric',
+            hour: '2-digit',
+            minute: '2-digit'
+          });
+
+          const deliveredTimeText = isDelivered ? (statusInfo.deliveredAt ? `Delivered at ${formatTimeOnly(statusInfo.deliveredAt)}` : 'Delivered') : '';
+
+          const imgUrl = window.FoodWalaApp && FoodWalaApp.optimizeImageUrl ? FoodWalaApp.optimizeImageUrl(order.restaurantImage, 200) : (order.restaurantImage || 'https://images.unsplash.com/photo-1517248135467-4c7edcad34c4?auto=format&fit=crop&w=200&q=75');
+
+          return `
+            <div class="col-12">
+              <div class="card border-0 shadow-sm rounded-4 bg-white p-4 fw-order-history-card">
+                <div class="d-flex flex-column flex-md-row justify-content-between align-items-md-center gap-3 pb-3 border-bottom">
+                  
+                  <div class="d-flex align-items-center gap-3">
+                    <img src="${imgUrl}" class="rounded-3" width="60" height="60" loading="lazy" decoding="async" style="width: 60px; height: 60px; object-fit: cover;" alt="${order.restaurantName}">
+                    <div>
+                      <div class="d-flex align-items-center gap-2 mb-1">
+                        <h5 class="fw-bold text-dark mb-0">${order.restaurantName}</h5>
+                        ${isLive 
+                          ? '<span class="live-badge-pulse"><span class="live-dot"></span> ON THE WAY</span>' 
+                          : '<span class="badge bg-success-subtle text-success border border-success-subtle px-2 py-1 rounded-pill small fw-bold"><i class="bi bi-check2-circle me-1"></i> DELIVERED</span>'
+                        }
+                      </div>
+                      <small class="text-muted"><i class="bi bi-geo-alt me-1"></i> ${order.restaurantAddress}</small>
+                      ${isDelivered ? `<small class="text-success fw-semibold d-block mt-1"><i class="bi bi-clock-history me-1"></i> ${deliveredTimeText}</small>` : ''}
+                    </div>
+                  </div>
+
+                  <div class="text-md-end">
+                    <div class="mb-1 d-flex align-items-center justify-content-md-end gap-1">
+                      <span class="badge order-id-badge-pill">Order #${order.orderId || order.id}</span>
+                    </div>
+                    <div class="small text-muted">${formattedDate}</div>
+                  </div>
+
+                </div>
+
+                <!-- Order Items List -->
+                <div class="py-3 border-bottom">
+                  <div class="d-flex flex-wrap gap-3">
+                    ${(order.items || []).map(i => `
+                      <div class="order-item-chip d-flex align-items-center gap-2 small">
+                        <span class="badge bg-danger rounded-pill px-2 py-1">${i.quantity}x</span>
+                        <span class="dish-name">${i.name}</span>
+                        <span class="dish-price">₹${i.price * i.quantity}</span>
+                      </div>
+                    `).join('')}
+                  </div>
+                </div>
+
+                <!-- Order Footer & Actions -->
+                <div class="d-flex flex-column flex-md-row justify-content-between align-items-md-center gap-3 pt-3">
+                  <div class="d-flex align-items-center gap-4">
+                    <div>
+                      <small class="text-muted d-block">Grand Total</small>
+                      <span class="fw-bold text-danger fs-5">₹${order.grandTotal}</span>
+                    </div>
+                    <div>
+                      <small class="text-muted d-block">Payment Mode</small>
+                      <span class="badge order-payment-chip">${order.paymentMethod || 'UPI'}</span>
+                    </div>
+                    <div>
+                      <small class="text-muted d-block">Deliver To</small>
+                      <span class="small text-dark text-truncate d-inline-block" style="max-width: 200px;">${order.deliveryAddress}</span>
+                    </div>
+                  </div>
+
+                  <div class="d-flex flex-wrap gap-2">
+                    ${isLive ? `
+                      <a href="./order-tracking.html?orderId=${order.orderId || order.id}" class="btn btn-danger btn-sm rounded-pill px-4 py-2 fw-bold shadow">
+                        <i class="bi bi-broadcast me-1"></i> Live Track Order
+                      </a>
+                    ` : `
+                      <a href="./order-tracking.html?orderId=${order.orderId || order.id}" class="btn btn-outline-danger btn-sm rounded-pill px-3 py-2 fw-semibold">
+                        <i class="bi bi-map me-1"></i> View Route & Receipt
+                      </a>
+                      <button type="button" class="btn btn-outline-warning btn-sm rounded-pill px-3 py-2 fw-semibold js-rate-order-btn" data-order-id="${order.orderId || order.id}" data-rest="${order.restaurantName}">
+                        <i class="bi bi-star-fill text-warning me-1"></i> Rate Order
+                      </button>
+                    `}
+                    <button type="button" class="btn btn-outline-danger btn-sm rounded-pill px-3 py-2 fw-semibold js-download-receipt-btn" data-order-id="${order.orderId || order.id}">
+                      <i class="bi bi-download me-1"></i> Download Receipt
+                    </button>
+                    <button type="button" class="btn btn-outline-secondary btn-sm rounded-pill px-3 py-2 fw-semibold js-resend-receipt-btn" data-order-id="${order.orderId || order.id}">
+                      <i class="bi bi-envelope me-1"></i> Resend Receipt
+                    </button>
+                    <a href="./restaurant-details.html?id=${order.restaurantId}" class="btn btn-outline-dark btn-sm rounded-pill px-3 py-2 fw-semibold">
+                      <i class="bi bi-arrow-repeat me-1"></i> Reorder
+                    </a>
+                  </div>
+
+                </div>
+
+              </div>
+            </div>
+          `;
+        }).join('');
+
+        // Attach Rate Order listeners
+        container.querySelectorAll('.js-rate-order-btn').forEach(btn => {
+          btn.addEventListener('click', () => {
+            const rest = btn.getAttribute('data-rest');
+            if (typeof window.showToast === 'function') {
+              window.showToast(`⭐ Thank you for rating ${rest}! Your 5-star review has been recorded.`, 'success');
+            }
+            btn.innerHTML = '<i class="bi bi-check2 text-success me-1"></i> Rated (5/5)';
+            btn.classList.remove('btn-outline-warning', 'text-dark');
+            btn.classList.add('btn-light', 'text-success', 'border');
+            btn.disabled = true;
+          });
+        });
+
+        // Attach Download Receipt listeners
+        container.querySelectorAll('.js-download-receipt-btn').forEach(btn => {
+          btn.addEventListener('click', (e) => {
+            e.preventDefault();
+            const orderId = btn.getAttribute('data-order-id');
+            const targetOrder = FoodWalaApp.Orders.getOrderById(orderId);
+            if (targetOrder && window.FoodWalaReceipt && typeof window.FoodWalaReceipt.downloadReceipt === 'function') {
+              window.FoodWalaReceipt.downloadReceipt(targetOrder);
+            } else {
+              FoodWalaApp.showToast('Could not load receipt for order #' + orderId, 'error');
+            }
+          });
+        });
+
+        // Attach Resend Receipt listeners
+        container.querySelectorAll('.js-resend-receipt-btn').forEach(btn => {
+          btn.addEventListener('click', async (e) => {
+            e.preventDefault();
+            const orderId = btn.getAttribute('data-order-id');
+            const targetOrder = FoodWalaApp.Orders.getOrderById(orderId);
+            if (!targetOrder) {
+              if (window.FoodWalaApp && FoodWalaApp.showToast) {
+                FoodWalaApp.showToast('Order not found.', 'error');
+              }
+              return;
+            }
+
+            if (!window.FoodWalaEmail || typeof window.FoodWalaEmail.sendReceiptEmail !== 'function') {
+              if (window.FoodWalaApp && FoodWalaApp.showToast) {
+                FoodWalaApp.showToast('Email service is loading, please try again.', 'warning');
+              }
+              return;
+            }
+
+            const origHtml = btn.innerHTML;
+            btn.innerHTML = '<span class="spinner-border spinner-border-sm me-1" role="status" aria-hidden="true"></span> Sending...';
+            btn.disabled = true;
+
+            try {
+              const res = await window.FoodWalaEmail.sendReceiptEmail(targetOrder, null, true);
+              if (res && res.success) {
+                btn.innerHTML = '<i class="bi bi-check2-circle text-success me-1"></i> Sent!';
+                btn.classList.remove('btn-outline-secondary');
+                btn.classList.add('btn-light', 'text-success', 'border');
+                setTimeout(() => {
+                  btn.innerHTML = origHtml;
+                  btn.classList.remove('btn-light', 'text-success', 'border');
+                  btn.classList.add('btn-outline-secondary');
+                  btn.disabled = false;
+                }, 4000);
+              } else {
+                btn.innerHTML = origHtml;
+                btn.disabled = false;
+              }
+            } catch (err) {
+              console.error('[Orders] Failed to resend receipt:', err);
+              btn.innerHTML = origHtml;
+              btn.disabled = false;
+            }
+          });
+        });
+      }
+
+      renderOrdersList();
+
+      window.addEventListener('foodwala:demoModeChanged', () => {
+        renderOrdersList();
+      });
+
+      window.addEventListener('foodwala:orderPlaced', () => {
+        renderOrdersList();
+      });
+
+      window.addEventListener('foodwala:orderStatusChanged', () => {
+        renderOrdersList();
+      });
+
+      window.addEventListener('storage', (e) => {
+        if (e.key === 'foodwala_orders' || e.key === 'foodwala_mock_orders' || e.key === 'foodwala_mock_kitchen_orders') {
+          renderOrdersList();
+        }
+      });
+
+      // Auto-recompute statuses every 30s with setInterval without full page reload
+      setInterval(renderOrdersList, 30000);
+    });
+  </script>
+  <script src="./js/help-assistance.js" defer></script>
+</body>
+</html>

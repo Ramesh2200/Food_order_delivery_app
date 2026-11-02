@@ -1,0 +1,902 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <link rel="icon" type="image/x-icon" href="./favicon.ico">
+  <link rel="icon" type="image/png" sizes="32x32" href="./favicon-32x32.png">
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>FoodWala — Bengaluru's Best Food Delivery & Restaurant Discovery</title>
+  <meta name="description" content="Order food online from top restaurants in Bengaluru with smart search, live tracking, and quick delivery.">
+  <link rel="preconnect" href="https://images.unsplash.com" crossorigin>
+  <link rel="dns-prefetch" href="https://images.unsplash.com">
+  <link rel="stylesheet" href="./assets/vendor/bootstrap/css/bootstrap.min.css">
+  <link rel="stylesheet" href="./assets/vendor/bootstrap-icons/bootstrap-icons.min.css">
+  <link rel="stylesheet" href="./css/style.min.css">
+  <link rel="stylesheet" href="./css/ui.css">
+  <link rel="stylesheet" href="./css/animations-3d.css">
+  <script src="./js/theme.js"></script>
+</head>
+<body class="bg-light d-flex flex-column min-vh-100">
+
+  <!-- NAVBAR -->
+  <nav class="navbar navbar-expand-lg navbar-light bg-white sticky-top shadow-sm py-2">
+    <div class="container">
+      <a class="navbar-brand d-flex align-items-center gap-2 fw-bold text-danger fs-4 text-decoration-none" href="./index.html">
+        <div class="bg-danger text-white rounded-3 d-flex align-items-center justify-content-center" style="width: 36px; height: 36px;">
+          <i class="bi bi-bag-heart-fill fs-5"></i>
+        </div>
+        <span>Food<span class="text-dark">Wala</span></span>
+      </a>
+
+      <button class="navbar-toggler border-0" type="button" data-bs-toggle="collapse" data-bs-target="#navbarContent">
+        <span class="navbar-toggler-icon"></span>
+      </button>
+
+      <div class="collapse navbar-collapse" id="navbarContent">
+        <!-- Location Picker Button (Instant Default Bengaluru) -->
+        <div class="d-flex align-items-center ms-lg-4 my-2 my-lg-0">
+          <button type="button" class="btn btn-light btn-sm rounded-pill px-3 py-2 d-flex align-items-center gap-2 border" data-bs-toggle="modal" data-bs-target="#locationModal" title="Select Delivery Location">
+            <i class="bi bi-geo-alt-fill text-danger fs-5"></i>
+            <div class="text-start lh-1" id="navbar-location-display">
+              <span class="fw-bold text-dark text-truncate d-inline-block" style="max-width: 140px;">Bengaluru</span>
+              <small class="text-muted d-block" style="font-size: 0.75rem;">Delivery Hub (Select)</small>
+            </div>
+            <i class="bi bi-chevron-down text-muted ms-1 small"></i>
+          </button>
+        </div>
+
+        <ul class="navbar-nav ms-auto align-items-center gap-lg-3 my-2 my-lg-0">
+          <li class="nav-item">
+            <a class="nav-link fw-semibold px-2 text-dark" href="./index.html">
+              <i class="bi bi-house-door me-1"></i> Home
+            </a>
+          </li>
+          <li class="nav-item">
+            <a class="nav-link fw-semibold px-2 text-dark" href="./restaurants.html">
+              <i class="bi bi-shop me-1"></i> Restaurants
+            </a>
+          </li>
+          <li class="nav-item">
+            <a class="nav-link fw-semibold px-2 text-dark" href="./orders.html">
+              <i class="bi bi-bag-check me-1"></i> Orders
+            </a>
+          </li>
+          <li class="nav-item">
+            <a class="btn btn-outline-danger btn-sm rounded-pill px-3 py-2 position-relative d-flex align-items-center gap-2" href="./cart.html">
+              <i class="bi bi-cart3 fs-6"></i>
+              <span class="fw-bold">Cart</span>
+              <span class="badge bg-danger rounded-pill js-cart-count" style="display: none;">0</span>
+            </a>
+          </li>
+          <!-- 24/7 Help Quick Action Button -->
+          <li class="nav-item">
+            <button type="button" class="btn btn-outline-danger btn-sm rounded-pill px-3 py-2 fw-bold d-flex align-items-center gap-1 js-open-247-help" title="FoodWala 24/7 Customer Help Assistance">
+              <i class="bi bi-headset fs-6 text-danger"></i>
+              <span>24/7 Help</span>
+            </button>
+          </li>
+          <!-- Dark / Light Theme Switcher Button -->
+          <li class="nav-item">
+            <button type="button" class="btn btn-sm rounded-pill px-3 py-2 fw-bold d-flex align-items-center gap-1.5 theme-toggle-btn" id="fw-theme-toggle-btn" title="Toggle Dark/Light Mode">
+              <i class="bi bi-moon-stars-fill theme-icon text-warning"></i>
+              <span class="theme-toggle-label d-none d-xl-inline">Dark</span>
+            </button>
+          </li>
+          <!-- User Slot (Populated dynamically from foodwala_current_user; default is Login) -->
+          <li class="nav-item ms-lg-2" id="navbar-user-slot">
+            <div class="d-flex align-items-center gap-2">
+              <a href="./login.html" class="btn btn-outline-danger btn-sm px-3 py-2 rounded-pill fw-semibold d-flex align-items-center gap-1">
+                <i class="bi bi-person"></i>
+                <span>Login</span>
+              </a>
+              <a href="./register.html" class="btn btn-danger btn-sm px-3 py-2 rounded-pill fw-semibold">Sign Up</a>
+            </div>
+          </li>
+        </ul>
+      </div>
+    </div>
+  </nav>
+
+  <!-- Location Selection Modal -->
+  <div class="modal fade" id="locationModal" tabindex="-1" aria-labelledby="locationModalLabel" aria-hidden="true">
+    <div class="modal-dialog modal-dialog-centered modal-dialog-scrollable">
+      <div class="modal-content border-0 shadow-lg rounded-4 overflow-hidden">
+        <div class="modal-header bg-danger text-white border-0 py-3">
+          <h5 class="modal-title fw-bold" id="locationModalLabel">
+            <i class="bi bi-geo-alt-fill me-2"></i>Select Delivery Location
+          </h5>
+          <button type="button" class="btn-close btn-close-white" data-bs-dismiss="modal" aria-label="Close"></button>
+        </div>
+        <div class="modal-body p-0" id="location-options-list">
+          <!-- Populated by FoodWalaApp.bindLocationModalEvents() -->
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <!-- Hero Section with Artisanal Woodfired Pizza Image Backdrop -->
+  <section class="hero-section hero-section-3d py-5 position-relative overflow-hidden text-white" style="min-height: 540px;">
+    <!-- Artisanal Woodfired Pizza Hero Image Backdrop & Cinematic Vignette Overlay -->
+    <div class="hero-image-box">
+      <img src="./images/hero-pizza.jpg" alt="Artisanal Woodfired Pizza" class="hero-image-elem" id="hero-backdrop-img">
+      <div class="hero-image-overlay"></div>
+    </div>
+
+    <div class="container py-4 position-relative" style="z-index: 5;">
+      <div class="row align-items-center g-4">
+        <div class="col-lg-7">
+          <div class="badge bg-danger bg-opacity-80 text-white border border-danger border-opacity-40 px-3 py-2 rounded-pill mb-3 fw-bold shadow-sm d-inline-flex align-items-center gap-1 backdrop-blur">
+            <i class="bi bi-lightning-charge-fill text-warning me-1"></i> Fast Delivery across 14+ Bengaluru Hubs
+          </div>
+          <h1 class="display-4 fw-extrabold mb-3 lh-sm text-white text-shadow-sm">
+            Craving something <span class="text-warning text-gradient">extraordinary?</span>
+          </h1>
+          <p class="lead text-light text-opacity-90 mb-4">
+            Order from 105+ iconic Bengaluru restaurants — from legendary Donne & Dum Biryanis to authentic Benne Dosa, woodfired pizzas, and gourmet burgers.
+          </p>
+
+          <!-- Search Box with Glow Shadow -->
+          <div class="bg-white p-2 rounded-4 shadow-2xl position-relative text-dark fw-3d-search-box" style="box-shadow: 0 20px 50px rgba(0, 0, 0, 0.4) !important; border: 1px solid rgba(255,255,255,0.2);">
+            <form action="./restaurants.html" method="GET" class="d-flex align-items-center gap-2">
+              <i class="bi bi-search text-danger fs-4 ms-3"></i>
+              <input type="text" name="q" id="hero-search-input" class="form-control border-0 shadow-none fs-6 py-2" placeholder="Search restaurant, dish (e.g. biriyani, dosa, burger, paneer)..." autocomplete="off">
+              <button type="submit" class="btn btn-danger btn-danger-shimmer px-4 py-2 rounded-3 fw-bold d-flex align-items-center gap-2">
+                <span>Find Food</span>
+                <i class="bi bi-arrow-right"></i>
+              </button>
+            </form>
+            <div id="hero-search-dropdown" class="search-autocomplete-dropdown shadow-lg rounded-3 bg-white" style="display:none; position:absolute; left:0; right:0; top:100%; z-index:1000; margin-top:8px;"></div>
+          </div>
+
+          <!-- Quick Suggestion Tags (High Contrast Crisp Pills) -->
+          <div class="d-flex flex-wrap align-items-center gap-2 mt-3 pt-1 text-light small">
+            <span class="fw-bold text-white"><i class="bi bi-fire text-warning"></i> Popular:</span>
+            <a href="./restaurants.html?q=biryani" class="badge fw-search-popular-pill rounded-pill px-3 py-1.5 shadow-sm">Biryani</a>
+            <a href="./restaurants.html?q=dosa" class="badge fw-search-popular-pill rounded-pill px-3 py-1.5 shadow-sm">Benne Dosa</a>
+            <a href="./restaurants.html?q=pizza" class="badge fw-search-popular-pill rounded-pill px-3 py-1.5 shadow-sm">Woodfired Pizza</a>
+            <a href="./restaurants.html?q=burger" class="badge fw-search-popular-pill rounded-pill px-3 py-1.5 shadow-sm">Gourmet Burger</a>
+            <a href="./restaurants.html?q=rolls" class="badge fw-search-popular-pill rounded-pill px-3 py-1.5 shadow-sm">Kathi Rolls</a>
+          </div>
+        </div>
+
+        <div class="col-lg-5 text-center position-relative">
+          <!-- 3D Interactive Culinary Showcase Stage -->
+          <div class="hero-3d-stage js-3d-tilt">
+            <!-- Glowing Food Aura -->
+            <div class="position-absolute rounded-circle" style="width: 280px; height: 280px; filter: blur(55px); background: radial-gradient(circle, rgba(249, 115, 22, 0.35) 0%, rgba(220, 38, 38, 0.22) 60%, transparent 100%); top: 50%; left: 50%; transform: translate(-50%, -50%); z-index: 1; pointer-events: none;"></div>
+
+            <!-- Orbiting 3D Dish 1: 3D Smash Burger -->
+            <div class="hero-3d-orbit-dish hero-orbit-burger js-3d-tilt" title="3D Gourmet Smash Burger">
+              <img src="./images/3d/3d-burger.svg" alt="3D Burger" width="125" height="125" decoding="async">
+            </div>
+
+            <!-- Orbiting 3D Dish 2: 3D Woodfired Pizza -->
+            <div class="hero-3d-orbit-dish hero-orbit-pizza js-3d-tilt" title="3D Woodfired Pepperoni Pizza">
+              <img src="./images/3d/3d-pizza.svg" alt="3D Pizza" width="130" height="130" decoding="async">
+            </div>
+
+            <!-- Orbiting 3D Dish 3: 3D Crispy Masala Dosa -->
+            <div class="hero-3d-orbit-dish hero-orbit-dosa js-3d-tilt" title="3D Crispy Benne Dosa">
+              <img src="./images/3d/3d-dosa.svg" alt="3D Masala Dosa" width="135" height="135" decoding="async">
+            </div>
+
+            <!-- Centerpiece: 3D Hyderabadi Dum Biryani Handi with Steam -->
+            <div class="hero-3d-centerpiece" title="3D Saffron Dum Biryani Handi">
+              <img src="./images/3d/3d-biryani.svg" alt="3D Biryani Handi" width="250" height="250" decoding="async">
+            </div>
+
+            <!-- 3D Floating Badges around hero stage -->
+            <div class="hero-3d-badge-floating hero-badge-1 d-flex align-items-center gap-2 shadow-lg">
+              <span class="fs-4">🔥</span>
+              <div class="text-start">
+                <span class="fw-bold d-block text-dark lh-1" style="font-size: 0.85rem;">50% Flat Off</span>
+                <small class="text-danger fw-semibold" style="font-size: 0.7rem;">Code: FOODWALA50</small>
+              </div>
+            </div>
+
+            <div class="hero-3d-badge-floating hero-badge-2 d-flex align-items-center gap-2 shadow-lg">
+              <span class="fs-4">⚡</span>
+              <div class="text-start">
+                <span class="fw-bold d-block text-dark lh-1" style="font-size: 0.85rem;">24 Min Delivery</span>
+                <small class="text-success fw-semibold" style="font-size: 0.7rem;">Live GPS Tracking</small>
+              </div>
+            </div>
+
+            <div class="hero-3d-badge-floating hero-badge-3 d-flex align-items-center gap-2 shadow-lg">
+              <span class="fs-4">⭐</span>
+              <div class="text-start">
+                <span class="fw-bold d-block text-dark lh-1" style="font-size: 0.85rem;">4.9 Rating</span>
+                <small class="text-muted fw-semibold" style="font-size: 0.7rem;">105+ Iconic Spots</small>
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+  </section>
+
+    <!-- Popular Food Categories Section (Rich Vibrant Appetizing Themes) -->
+  <section class="py-5 fw-categories-section-3d">
+    <div class="container">
+      <div class="d-flex justify-content-between align-items-end mb-4 flex-wrap gap-2">
+        <div>
+          <span class="fw-category-pill-tag"><i class="bi bi-stars text-warning me-1"></i> Fresh & Craved Flavors</span>
+          <h2 class="fw-extrabold text-dark mb-1">Popular Food Categories</h2>
+          <p class="text-muted small mb-0">Bengaluru's top culinary choices crafted by master chefs & cloud kitchens</p>
+        </div>
+        <a href="./restaurants.html" class="btn btn-outline-danger btn-sm rounded-pill fw-bold shadow-sm">View All Categories &rarr;</a>
+      </div>
+
+      <div class="row row-cols-2 row-cols-md-4 row-cols-lg-8 g-3 text-center">
+        <div class="col">
+          <a href="./restaurants.html?q=pizza" class="category-card-3d cat-pizza js-3d-tilt" title="Order Gourmet Pizza">
+            <div class="cat-img-wrap">
+              <div class="cat-pedestal"></div>
+              <img src="./images/categories/pizza.jpg" width="84" height="84" class="cat-real-photo" loading="lazy" decoding="async" alt="Woodfired Pizza">
+            </div>
+            <span class="cat-label">Pizza</span>
+            <span class="cat-badge-pill">35+ Spots</span>
+          </a>
+        </div>
+        <div class="col">
+          <a href="./restaurants.html?q=burger" class="category-card-3d cat-burger js-3d-tilt" title="Order Juicy Burgers">
+            <div class="cat-img-wrap">
+              <div class="cat-pedestal"></div>
+              <img src="./images/categories/burger.jpg" width="84" height="84" class="cat-real-photo" loading="lazy" decoding="async" alt="Juicy Burger">
+            </div>
+            <span class="cat-label">Burger</span>
+            <span class="cat-badge-pill">Gourmet</span>
+          </a>
+        </div>
+        <div class="col">
+          <a href="./restaurants.html?q=biryani" class="category-card-3d cat-biryani js-3d-tilt" title="Order Authentic Biryani">
+            <div class="cat-img-wrap">
+              <div class="cat-pedestal"></div>
+              <img src="./images/categories/biryani.jpg" width="84" height="84" class="cat-real-photo" loading="lazy" decoding="async" alt="Hyderabadi Biryani">
+            </div>
+            <span class="cat-label">Biryani</span>
+            <span class="cat-badge-pill">Dum & Donne</span>
+          </a>
+        </div>
+        <div class="col">
+          <a href="./restaurants.html?cuisine=Chinese" class="category-card-3d cat-chinese js-3d-tilt" title="Order Asian & Chinese">
+            <div class="cat-img-wrap">
+              <div class="cat-pedestal"></div>
+              <img src="./images/categories/chinese.jpg" width="84" height="84" class="cat-real-photo" loading="lazy" decoding="async" alt="Wok Tossed Noodles">
+            </div>
+            <span class="cat-label">Chinese</span>
+            <span class="cat-badge-pill">Wok Tossed</span>
+          </a>
+        </div>
+        <div class="col">
+          <a href="./restaurants.html?cuisine=South+Indian" class="category-card-3d cat-south-indian js-3d-tilt" title="Order Benne Dosa & South Indian">
+            <div class="cat-img-wrap">
+              <div class="cat-pedestal"></div>
+              <img src="./images/categories/south-indian.jpg" width="84" height="84" class="cat-real-photo" loading="lazy" decoding="async" alt="Crispy Masala Dosa">
+            </div>
+            <span class="cat-label">South Indian</span>
+            <span class="cat-badge-pill">Benne Dosa</span>
+          </a>
+        </div>
+        <div class="col">
+          <a href="./restaurants.html?cuisine=Beverages" class="category-card-3d cat-beverages js-3d-tilt" title="Order Chilled Drinks & Shakes">
+            <div class="cat-img-wrap">
+              <div class="cat-pedestal"></div>
+              <img src="./images/categories/beverages.jpg" width="84" height="84" class="cat-real-photo" loading="lazy" decoding="async" alt="Chilled Beverages">
+            </div>
+            <span class="cat-label">Beverages</span>
+            <span class="cat-badge-pill">Chilled & Cold</span>
+          </a>
+        </div>
+        <div class="col">
+          <a href="./restaurants.html?q=dessert" class="category-card-3d cat-desserts js-3d-tilt" title="Order Cakes & Desserts">
+            <div class="cat-img-wrap">
+              <div class="cat-pedestal"></div>
+              <img src="./images/categories/desserts.jpg" width="84" height="84" class="cat-real-photo" loading="lazy" decoding="async" alt="Molten Chocolate Cake">
+            </div>
+            <span class="cat-label">Desserts</span>
+            <span class="cat-badge-pill">Sweet Velvet</span>
+          </a>
+        </div>
+        <div class="col">
+          <a href="./restaurants.html?q=roll" class="category-card-3d cat-rolls js-3d-tilt" title="Order Kathi Rolls & Wraps">
+            <div class="cat-img-wrap">
+              <div class="cat-pedestal"></div>
+              <img src="./images/categories/rolls.jpg" width="84" height="84" class="cat-real-photo" loading="lazy" decoding="async" alt="Tandoori Kathi Rolls">
+            </div>
+            <span class="cat-label">Rolls</span>
+            <span class="cat-badge-pill">Kathi Wraps</span>
+          </a>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <!-- Featured Bengaluru Restaurants (Warm Dining Palette & Filter Pills) -->
+  <section class="py-5 fw-restaurants-section-3d flex-grow-1">
+    <div class="container">
+      <div class="d-flex justify-content-between align-items-end mb-3 flex-wrap gap-2">
+        <div>
+          <span class="fw-category-pill-tag"><i class="bi bi-fire text-danger me-1"></i> Top Rated In Bengaluru</span>
+          <h2 class="fw-extrabold text-dark mb-1">Featured Restaurants</h2>
+          <p class="text-muted small mb-0">Handpicked dining destinations with rich culinary flavors & instant discounts</p>
+        </div>
+        <a href="./restaurants.html" class="btn btn-danger btn-danger-shimmer btn-sm rounded-pill px-3 py-2 fw-bold shadow-sm">Explore All 105 Spots &rarr;</a>
+      </div>
+
+      <!-- Quick Category Filter Pills -->
+      <div class="restaurant-filter-bar mb-4" id="home-restaurant-filter-bar">
+        <button type="button" class="restaurant-filter-pill active" data-filter="all">🔥 All Spots</button>
+        <button type="button" class="restaurant-filter-pill" data-filter="fast">⚡ Fast Delivery (≤30m)</button>
+        <button type="button" class="restaurant-filter-pill" data-filter="veg">🌱 Pure Veg</button>
+        <button type="button" class="restaurant-filter-pill" data-filter="rated">⭐ Rating 4.5+</button>
+        <button type="button" class="restaurant-filter-pill" data-filter="offer">🎁 Flat 50% Off</button>
+      </div>
+
+      <div class="row g-4" id="home-featured-grid">
+        <!-- Shimmer Skeleton Placeholders (rendered instantly until data resolves) -->
+        <div class="col-md-6 col-lg-3">
+          <div class="skeleton-card">
+            <div class="skeleton-card-img skeleton-box"></div>
+            <div class="skeleton-card-body">
+              <div class="skeleton-box" style="height: 18px; width: 70%; margin-bottom: 10px;"></div>
+              <div class="skeleton-box" style="height: 14px; width: 45%; margin-bottom: 14px;"></div>
+              <div class="skeleton-box" style="height: 14px; width: 100%;"></div>
+            </div>
+          </div>
+        </div>
+        <div class="col-md-6 col-lg-3">
+          <div class="skeleton-card">
+            <div class="skeleton-card-img skeleton-box"></div>
+            <div class="skeleton-card-body">
+              <div class="skeleton-box" style="height: 18px; width: 65%; margin-bottom: 10px;"></div>
+              <div class="skeleton-box" style="height: 14px; width: 50%; margin-bottom: 14px;"></div>
+              <div class="skeleton-box" style="height: 14px; width: 100%;"></div>
+            </div>
+          </div>
+        </div>
+        <div class="col-md-6 col-lg-3">
+          <div class="skeleton-card">
+            <div class="skeleton-card-img skeleton-box"></div>
+            <div class="skeleton-card-body">
+              <div class="skeleton-box" style="height: 18px; width: 75%; margin-bottom: 10px;"></div>
+              <div class="skeleton-box" style="height: 14px; width: 40%; margin-bottom: 14px;"></div>
+              <div class="skeleton-box" style="height: 14px; width: 100%;"></div>
+            </div>
+          </div>
+        </div>
+        <div class="col-md-6 col-lg-3">
+          <div class="skeleton-card">
+            <div class="skeleton-card-img skeleton-box"></div>
+            <div class="skeleton-card-body">
+              <div class="skeleton-box" style="height: 18px; width: 60%; margin-bottom: 10px;"></div>
+              <div class="skeleton-box" style="height: 14px; width: 55%; margin-bottom: 14px;"></div>
+              <div class="skeleton-box" style="height: 14px; width: 100%;"></div>
+            </div>
+          </div>
+        </div>
+        <div class="col-md-6 col-lg-3">
+          <div class="skeleton-card">
+            <div class="skeleton-card-img skeleton-box"></div>
+            <div class="skeleton-card-body">
+              <div class="skeleton-box" style="height: 18px; width: 70%; margin-bottom: 10px;"></div>
+              <div class="skeleton-box" style="height: 14px; width: 45%; margin-bottom: 14px;"></div>
+              <div class="skeleton-box" style="height: 14px; width: 100%;"></div>
+            </div>
+          </div>
+        </div>
+        <div class="col-md-6 col-lg-3">
+          <div class="skeleton-card">
+            <div class="skeleton-card-img skeleton-box"></div>
+            <div class="skeleton-card-body">
+              <div class="skeleton-box" style="height: 18px; width: 65%; margin-bottom: 10px;"></div>
+              <div class="skeleton-box" style="height: 14px; width: 50%; margin-bottom: 14px;"></div>
+              <div class="skeleton-box" style="height: 14px; width: 100%;"></div>
+            </div>
+          </div>
+        </div>
+        <div class="col-md-6 col-lg-3">
+          <div class="skeleton-card">
+            <div class="skeleton-card-img skeleton-box"></div>
+            <div class="skeleton-card-body">
+              <div class="skeleton-box" style="height: 18px; width: 80%; margin-bottom: 10px;"></div>
+              <div class="skeleton-box" style="height: 14px; width: 40%; margin-bottom: 14px;"></div>
+              <div class="skeleton-box" style="height: 14px; width: 100%;"></div>
+            </div>
+          </div>
+        </div>
+        <div class="col-md-6 col-lg-3">
+          <div class="skeleton-card">
+            <div class="skeleton-card-img skeleton-box"></div>
+            <div class="skeleton-card-body">
+              <div class="skeleton-box" style="height: 18px; width: 70%; margin-bottom: 10px;"></div>
+              <div class="skeleton-box" style="height: 14px; width: 50%; margin-bottom: 14px;"></div>
+              <div class="skeleton-box" style="height: 14px; width: 100%;"></div>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+  </section>
+
+    <!-- ==========================================================================
+       SESSION 5: 3D HOLOGRAPHIC GOURMET DEALS & OFFERS BANNER
+       ========================================================================== -->
+  <section class="fw-3d-deals-section py-5">
+    <div class="container py-3">
+      <div class="row justify-content-center">
+        <div class="col-lg-10">
+          <div class="fw-3d-deal-card js-3d-tilt">
+            <div class="fw-3d-holo-shimmer"></div>
+            <div class="row align-items-center g-4 position-relative" style="z-index: 5;">
+              <div class="col-md-8">
+                <div class="badge bg-warning bg-opacity-25 text-dark border border-warning border-opacity-50 px-3 py-1.5 rounded-pill mb-2 fw-bold small">
+                  ⭐ DAILY CHEF SPECIAL OFFER
+                </div>
+                <h3 class="display-6 fw-extrabold text-dark mb-2">
+                  FLAT 50% OFF <span class="text-danger">ON EVERY ORDER</span>
+                </h3>
+                <p class="text-secondary opacity-90 mb-3 small">
+                  Apply coupon code on your favourite Biryani, Woodfired Pizza, Gourmet Burgers, and Desserts across Bengaluru.
+                </p>
+                <div class="d-flex flex-wrap align-items-center gap-2">
+                  <div class="bg-white px-3 py-2 rounded-3 border border-warning border-2 text-danger font-monospace fw-bold fs-6 shadow-sm">
+                    FOODWALA50
+                  </div>
+                  <button type="button" class="btn btn-warning rounded-pill px-4 py-2 fw-bold text-dark shadow-sm" onclick="navigator.clipboard && navigator.clipboard.writeText('FOODWALA50'); FoodWalaApp && FoodWalaApp.showToast('Coupon code FOODWALA50 copied to clipboard!', 'success');">
+                    <i class="bi bi-copy me-1"></i> Copy Code
+                  </button>
+                  <small class="text-muted ms-2 fw-semibold">Valid across all 105+ restaurants</small>
+                </div>
+              </div>
+              <div class="col-md-4 text-center">
+                <div class="position-relative d-inline-block">
+                  <img src="./images/3d/3d-giftbox.svg" alt="3D Special Offer Gift Box" class="fw-3d-giftbox-model" decoding="async">
+                </div>
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <!-- ==========================================================================
+       3D LIVE ORDER TRACKING & TURN-BY-TURN DELIVERY SECTION
+       ========================================================================== -->
+  <section class="fw-3d-tracking-section py-5">
+    <div class="container py-3">
+      <div class="row align-items-center g-5">
+        <div class="col-lg-6">
+          <div class="badge bg-success bg-opacity-10 text-success border border-success border-opacity-25 px-3 py-1.5 rounded-pill mb-3 fw-bold small d-inline-flex align-items-center gap-2">
+            <span class="spinner-grow spinner-grow-sm text-success" style="width: 8px; height: 8px;" role="status"></span>
+            <span>Live GPS Order Tracking Active</span>
+          </div>
+          <h2 class="display-6 fw-extrabold text-dark mb-3">
+            Hyper-Local Speed. <span class="text-danger">Turn-by-Turn Precision.</span>
+          </h2>
+          <p class="text-secondary opacity-90 mb-4">
+            From our kitchen hubs in Maruthi Nagar, Koramangala, and across 14+ Bengaluru hubs straight to your doorstep in an average of 24 minutes.
+          </p>
+
+          <div class="d-flex flex-column gap-2 mb-4">
+            <div class="fw-3d-tracking-milestone milestone-prep d-flex align-items-center gap-3">
+              <div class="fw-3d-milestone-dot bg-danger text-white shadow-sm">🍳</div>
+              <div>
+                <span class="fw-bold text-dark small d-block">1. Fresh Kitchen Prep</span>
+                <small class="text-muted">Cooked to order with tamper-proof thermal packaging.</small>
+              </div>
+            </div>
+            <div class="fw-3d-tracking-milestone milestone-dispatch d-flex align-items-center gap-3">
+              <div class="fw-3d-milestone-dot bg-warning text-dark shadow-sm">🛵</div>
+              <div>
+                <span class="fw-bold text-dark small d-block">2. Valet Live Dispatch</span>
+                <small class="text-muted">Assigned immediately with turn-by-turn motorcycle telemetry.</small>
+              </div>
+            </div>
+            <div class="fw-3d-tracking-milestone milestone-arrival d-flex align-items-center gap-3">
+              <div class="fw-3d-milestone-dot bg-success text-white shadow-sm">📍</div>
+              <div>
+                <span class="fw-bold text-dark small d-block">3. Live GPS Arrival at Maruthi Nagar / BLR</span>
+                <small class="text-muted">Watch your delivery partner arrive live on map in 24 mins.</small>
+              </div>
+            </div>
+          </div>
+
+          <div class="d-flex gap-3">
+            <a href="./orders.html" class="btn btn-danger btn-danger-shimmer px-4 py-2.5 rounded-pill fw-bold d-inline-flex align-items-center gap-2 shadow-sm">
+              <i class="bi bi-geo-alt-fill"></i> Track Live Orders
+            </a>
+            <a href="./restaurants.html" class="btn btn-outline-danger px-4 py-2.5 rounded-pill fw-bold">
+              Explore Menu
+            </a>
+          </div>
+        </div>
+
+        <div class="col-lg-6">
+          <div class="p-4 bg-white rounded-4 border border-light shadow-lg">
+            <!-- 3D Road Stage -->
+            <div class="fw-3d-road-stage mb-3">
+              <div class="fw-3d-sky-glow"></div>
+              <div class="fw-3d-road-plane">
+                <div class="fw-3d-road-curbs">
+                  <div class="fw-3d-road-curb"></div>
+                  <div class="fw-3d-road-curb"></div>
+                </div>
+                <div class="fw-3d-road-dashes"></div>
+              </div>
+              <div class="fw-3d-scooter-anchor">
+                <div class="fw-3d-scooter-pulse-ring"></div>
+                <div class="fw-3d-scooter-vehicle">
+                  <img src="./images/3d/3d-scooter.svg" alt="3D FoodWala Delivery Scooter" class="fw-3d-scooter-svg-model" decoding="async">
+                </div>
+                <div class="fw-3d-scooter-shadow"></div>
+              </div>
+            </div>
+
+            <!-- Live Telemetry Card -->
+            <div class="bg-light p-3 rounded-3 border d-flex align-items-center justify-content-between">
+              <div class="d-flex align-items-center gap-3">
+                <div class="bg-success text-white rounded-circle d-flex align-items-center justify-content-center shadow-sm" style="width: 44px; height: 44px;">
+                  <i class="bi bi-shield-check fs-5"></i>
+                </div>
+                <div>
+                  <span class="fw-bold text-dark d-block small">Valet: Suresh Kumar</span>
+                  <small class="text-success fw-bold"><i class="bi bi-record-circle me-1"></i>En Route: Maruthi Nagar (14 min)</small>
+                </div>
+              </div>
+              <span class="badge bg-danger rounded-pill px-3 py-2 fw-bold">SPEED: 32 km/h</span>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <!-- 3D "Why Choose FoodWala" Features Section -->
+  <section class="fw-features-3d-section py-5">
+    <div class="container">
+      <div class="text-center mx-auto mb-5" style="max-width: 680px;">
+        <span class="badge bg-danger bg-opacity-10 text-danger fw-bold text-uppercase px-3 py-2 rounded-pill small mb-2 d-inline-block">
+          <i class="bi bi-stars me-1"></i> The FoodWala Advantage
+        </span>
+        <h2 class="display-6 fw-extrabold text-dark mb-2">Why Choose FoodWala?</h2>
+        <p class="text-muted">Hyper-local Bengaluru food intelligence, real-time dispatch, and zero compromise on taste.</p>
+      </div>
+
+      <div class="row g-4">
+        <div class="col-md-6 col-lg-3">
+          <div class="fw-feature-3d-card feature-fast-delivery js-3d-tilt">
+            <div class="feature-3d-icon-box bg-danger bg-gradient text-white">
+              <i class="bi bi-lightning-charge-fill"></i>
+            </div>
+            <h5 class="fw-bold text-dark mb-2 fw-3d-layer-float">Lightning Fast</h5>
+            <p class="text-muted small mb-0 fw-3d-layer-base">Average 24-minute hyper-delivery from your nearest Bengaluru kitchen hubs.</p>
+          </div>
+        </div>
+
+        <div class="col-md-6 col-lg-3">
+          <div class="fw-feature-3d-card feature-live-tracking js-3d-tilt">
+            <div class="feature-3d-icon-box bg-primary bg-gradient text-white">
+              <i class="bi bi-crosshair"></i>
+            </div>
+            <h5 class="fw-bold text-dark mb-2 fw-3d-layer-float">Live GPS Tracking</h5>
+            <p class="text-muted small mb-0 fw-3d-layer-base">Track your valet's live motorcycle turn-by-turn with precision Bengaluru routing.</p>
+          </div>
+        </div>
+
+        <div class="col-md-6 col-lg-3">
+          <div class="fw-feature-3d-card feature-best-offers js-3d-tilt">
+            <div class="feature-3d-icon-box bg-warning bg-gradient text-white">
+              <i class="bi bi-tag-fill"></i>
+            </div>
+            <h5 class="fw-bold text-dark mb-2 fw-3d-layer-float">Unbeatable Offers</h5>
+            <p class="text-muted small mb-0 fw-3d-layer-base">Up to 50% flat off on daily chef specials, free deliveries, and zero hidden markups.</p>
+          </div>
+        </div>
+
+        <div class="col-md-6 col-lg-3">
+          <div class="fw-feature-3d-card feature-curated-spots js-3d-tilt">
+            <div class="feature-3d-icon-box bg-success bg-gradient text-white">
+              <i class="bi bi-patch-check-fill"></i>
+            </div>
+            <h5 class="fw-bold text-dark mb-2 fw-3d-layer-float">105+ Curated Spots</h5>
+            <p class="text-muted small mb-0 fw-3d-layer-base">From legendary heritage eateries to modern cafes, personally vetted for hygiene.</p>
+          </div>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <!-- FOOTER -->
+  <footer class="bg-dark text-light pt-5 pb-4 mt-auto border-top border-secondary">
+    <div class="container">
+      <div class="row g-4">
+        <div class="col-lg-4 col-md-6">
+          <div class="d-flex align-items-center gap-2 mb-3">
+            <div class="bg-danger text-white rounded-3 d-flex align-items-center justify-content-center" style="width: 38px; height: 38px;">
+              <i class="bi bi-bag-heart-fill fs-5"></i>
+            </div>
+            <h4 class="text-white fw-bold mb-0">Food<span class="text-danger">Wala</span></h4>
+          </div>
+          <p class="text-muted small mb-3">Bengaluru's premier authentic food discovery and hyper-fast delivery network. Bringing 105+ iconic restaurants and 750+ delicacies straight to your doorstep.</p>
+          <div class="d-flex gap-3 fs-5">
+            <a href="https://github.com/Ramesh2200/Food_order_delivery_app" target="_blank" rel="noopener noreferrer" class="text-secondary hover-danger" title="GitHub Repository"><i class="bi bi-github"></i></a>
+            <a href="https://github.com/Ramesh2200" target="_blank" rel="noopener noreferrer" class="text-secondary hover-danger" title="GitHub Profile"><i class="bi bi-person-circle"></i></a>
+            <a href="https://rameswork.online" target="_blank" rel="noopener noreferrer" class="text-secondary hover-danger" title="Developer Portfolio"><i class="bi bi-globe"></i></a>
+            <a href="https://rameshwork-online-main.vercel.app/" target="_blank" rel="noopener noreferrer" class="text-secondary hover-danger" title="Vercel App"><i class="bi bi-triangle-half"></i></a>
+            <a href="mailto:ballariramesh0825@gmail.com" class="text-secondary hover-danger" title="Contact Email"><i class="bi bi-envelope-fill"></i></a>
+          </div>
+        </div>
+
+        <div class="col-lg-2 col-md-6 col-6">
+          <h6 class="text-uppercase fw-bold text-white mb-3">Quick Links</h6>
+          <ul class="list-unstyled small d-flex flex-column gap-2 mb-0">
+            <li><a href="./index.html" class="text-muted text-decoration-none hover-light">Home</a></li>
+            <li><a href="./restaurants.html" class="text-muted text-decoration-none hover-light">All Restaurants</a></li>
+            <li><a href="./orders.html" class="text-muted text-decoration-none hover-light">My Orders</a></li>
+            <li><a href="./cart.html" class="text-muted text-decoration-none hover-light">Cart</a></li>
+            <li><a href="./profile.html" class="text-muted text-decoration-none hover-light">User Profile</a></li>
+            <li><a href="./addresses.html" class="text-muted text-decoration-none hover-light">Saved Addresses</a></li>
+            <li><a href="https://github.com/Ramesh2200/Food_order_delivery_app" target="_blank" rel="noopener noreferrer" class="text-warning text-decoration-none hover-light fw-bold"><i class="bi bi-github me-1"></i>GitHub Repo</a></li>
+            <li><a href="https://rameswork.online" target="_blank" rel="noopener noreferrer" class="text-info text-decoration-none hover-light fw-bold"><i class="bi bi-globe me-1"></i>Portfolio</a></li>
+            <li><a href="./login.html?portal=admin" class="text-muted text-decoration-none hover-light"><i class="bi bi-shield-lock me-1"></i>Staff Portal</a></li>
+          </ul>
+        </div>
+
+        <div class="col-lg-3 col-md-6 col-6">
+          <h6 class="text-uppercase fw-bold text-white mb-3">Top Bengaluru Areas</h6>
+          <ul class="list-unstyled small d-flex flex-column gap-2 mb-0 text-muted">
+            <li><i class="bi bi-geo-alt text-danger me-1"></i> Koramangala & HSR</li>
+            <li><i class="bi bi-geo-alt text-danger me-1"></i> Indiranagar & MG Road</li>
+            <li><i class="bi bi-geo-alt text-danger me-1"></i> Whitefield & Marathahalli</li>
+            <li><i class="bi bi-geo-alt text-danger me-1"></i> Malleshwaram & Rajajinagar</li>
+            <li><i class="bi bi-geo-alt text-danger me-1"></i> Jayanagar & Basavanagudi</li>
+          </ul>
+        </div>
+
+        <div class="col-lg-3 col-md-6">
+          <h6 class="text-uppercase fw-bold text-white mb-3">Secure Payments</h6>
+          <p class="text-muted small mb-2">100% Secure Checkout powered by Razorpay Test Sandbox and UPI.</p>
+          <div class="d-flex flex-wrap gap-2 align-items-center mb-3">
+            <span class="badge bg-secondary p-2"><i class="bi bi-credit-card me-1"></i> Cards</span>
+            <span class="badge bg-secondary p-2"><i class="bi bi-qr-code me-1"></i> UPI</span>
+            <span class="badge bg-secondary p-2"><i class="bi bi-bank me-1"></i> NetBanking</span>
+            <span class="badge bg-secondary p-2"><i class="bi bi-cash-stack me-1"></i> Cash On Delivery</span>
+          </div>
+          <small class="text-secondary d-block">Razorpay Public Test Key: <code class="text-light">rzp_test_TSA8hQOJIQaDo0</code></small>
+        </div>
+      </div>
+
+      <hr class="border-secondary my-4">
+
+      <div class="d-flex flex-column flex-md-row justify-content-between align-items-center small text-muted">
+        <div>&copy; 2026 FoodWala Inc. All rights reserved. Developed by <a href="https://github.com/Ramesh2200" target="_blank" rel="noopener noreferrer" class="text-light text-decoration-none fw-semibold">Ramesh K</a> &bull; <a href="https://github.com/Ramesh2200/Food_order_delivery_app" target="_blank" rel="noopener noreferrer" class="text-secondary text-decoration-none"><i class="bi bi-github me-1"></i>GitHub</a> &bull; <a href="https://rameswork.online" target="_blank" rel="noopener noreferrer" class="text-secondary text-decoration-none"><i class="bi bi-globe me-1"></i>Portfolio</a></div>
+        <div class="mt-2 mt-md-0">
+          <span>Bengaluru, Karnataka &bull; 105 Real Restaurants &bull; 756 Menu Items</span>
+        </div>
+      </div>
+    </div>
+  </footer>
+
+  <!-- Fast-Path Featured Dataset (Instant zero-delay rendering) -->
+  <script src="./js/featured-seed.js"></script>
+  <!-- Bootstrap 5 JS Bundle -->
+  <script src="./assets/vendor/bootstrap/js/bootstrap.bundle.min.js" defer></script>
+  <!-- Core FoodWala JS (Minified) -->
+  <script src="./js/ui.js" defer></script>
+    <!-- FoodWala Architecture: Config & Adapters -->
+  <script src="./js/config.js" defer></script>
+  <script src="./js/adapters/mockAdapter.js" defer></script>
+  <script src="./js/adapters/liveAdapter.js" defer></script>
+  <script src="./js/api.js" defer></script>
+  <script src="./js/areas.js" defer></script>
+  <script src="./js/app.min.js?v=20261020_03" defer></script>
+  <script src="./js/smart-search.min.js" defer></script>
+
+    <script>
+    // Universal Unsplash image resizing helper (WebP, width-capped, eliminates blank cards)
+    function getOptimizedFoodImg(url, width = 400) {
+      if (!url || typeof url !== 'string') {
+        return 'https://images.unsplash.com/photo-1517248135467-4c7edcad34c4?auto=format&fit=crop&w=' + width + '&q=75';
+      }
+      if (url.includes('images.unsplash.com') && !url.includes('w=')) {
+        const sep = url.includes('?') ? '&' : '?';
+        return url + sep + 'auto=format&fit=crop&w=' + width + '&q=75';
+      }
+      return url;
+    }
+    window.getOptimizedFoodImg = getOptimizedFoodImg;
+    let currentFeaturedList = [];
+    let currentFilter = 'all';
+
+    function getCuisineBadge(cuisine) {
+      if (!cuisine) return '<span class="cuisine-tag-pill cuisine-tag-default">Multi-Cuisine</span>';
+      const c = cuisine.toLowerCase();
+      if (c.includes('south indian') || c.includes('dosa')) {
+        return '<span class="cuisine-tag-pill cuisine-tag-south-indian">South Indian</span><span class="cuisine-tag-pill cuisine-tag-default">Tiffin</span>';
+      } else if (c.includes('biryani')) {
+        return '<span class="cuisine-tag-pill cuisine-tag-biryani">Biryani</span><span class="cuisine-tag-pill cuisine-tag-default">Dum Special</span>';
+      } else if (c.includes('burger') || c.includes('fast food') || c.includes('continental')) {
+        return '<span class="cuisine-tag-pill cuisine-tag-burger">Burgers</span><span class="cuisine-tag-pill cuisine-tag-default">Continental</span>';
+      } else if (c.includes('dessert') || c.includes('ice cream')) {
+        return '<span class="cuisine-tag-pill cuisine-tag-dessert">Desserts</span><span class="cuisine-tag-pill cuisine-tag-default">Ice Cream</span>';
+      } else {
+        const parts = cuisine.split(',');
+        const first = parts[0].trim();
+        const second = parts[1] ? parts[1].trim() : 'Popular';
+        return `<span class="cuisine-tag-pill cuisine-tag-default">${first}</span><span class="cuisine-tag-pill cuisine-tag-default">${second}</span>`;
+      }
+    }
+
+    function renderFeaturedGrid(list) {
+      const grid = document.getElementById('home-featured-grid');
+      if (!grid) return;
+      if (list && list.length) {
+        currentFeaturedList = list;
+      }
+      
+      let filtered = currentFeaturedList.slice(0, 8);
+      if (currentFilter === 'fast') {
+        filtered = currentFeaturedList.filter(r => parseInt(r.deliveryTime || r.delivery_time || 30, 10) <= 30).slice(0, 8);
+      } else if (currentFilter === 'veg') {
+        filtered = currentFeaturedList.filter(r => r.isPureVeg).slice(0, 8);
+      } else if (currentFilter === 'rated') {
+        filtered = currentFeaturedList.filter(r => (r.rating || 4.2) >= 4.5).slice(0, 8);
+      } else if (currentFilter === 'offer') {
+        filtered = currentFeaturedList.slice(0, 8);
+      }
+
+      if (!filtered.length) {
+        grid.innerHTML = `
+          <div class="col-12 text-center py-5">
+            <div class="bg-white p-5 rounded-4 shadow-sm border border-light">
+              <i class="bi bi-funnel fs-1 text-muted d-block mb-3"></i>
+              <h5 class="fw-bold text-dark">No restaurants match this filter</h5>
+              <p class="text-muted small">Try selecting "All Spots" to view all iconic Bengaluru restaurants.</p>
+              <button class="btn btn-outline-danger btn-sm rounded-pill px-4 fw-bold mt-2" onclick="applyRestaurantFilter('all')">Show All</button>
+            </div>
+          </div>
+        `;
+        return;
+      }
+
+      grid.innerHTML = filtered.map(r => `
+        <div class="col-md-6 col-lg-3">
+          <div class="card h-100 border-0 fw-3d-restaurant-card js-3d-tilt">
+            <a href="./restaurant-details.html?id=${r.id || r.restaurantId}" class="text-decoration-none text-dark d-flex flex-column h-100">
+              <div class="card-img-wrapper position-relative">
+                <img src="${getOptimizedFoodImg(r.imagePath || r.image, 400)}" class="card-img-top" width="360" height="180" loading="lazy" decoding="async" style="height: 180px; width: 100%; object-fit: cover;" alt="${r.name}" onerror="this.onerror=null;this.src='https://images.unsplash.com/photo-1517248135467-4c7edcad34c4?auto=format&fit=crop&w=400&q=75';">
+                <div class="card-img-vignette"></div>
+                <!-- Offer Ribbon -->
+                <div class="position-absolute top-0 start-0 m-2 card-badge-3d">
+                  <span class="card-offer-ribbon">
+                    <i class="bi bi-tag-fill"></i> FLAT 50% OFF
+                  </span>
+                </div>
+                <!-- Veg / Non-Veg Badge -->
+                <div class="position-absolute top-0 end-0 m-2 card-badge-3d">
+                  ${r.isPureVeg ? '<span class="badge bg-success bg-gradient px-2 py-1 rounded-pill shadow-sm" style="font-size: 0.68rem; font-weight: 800;">🌱 PURE VEG</span>' : '<span class="badge bg-dark bg-opacity-75 text-white px-2 py-1 rounded-pill shadow-sm" style="font-size: 0.68rem; font-weight: 800;">⭐ ICONIC</span>'}
+                </div>
+                <!-- Delivery Time -->
+                <div class="position-absolute bottom-0 start-0 m-2 card-badge-3d">
+                  <span class="card-delivery-badge">
+                    <i class="bi bi-lightning-charge-fill text-warning"></i> ${typeof r.deliveryTime === 'string' && r.deliveryTime.toLowerCase().includes('min') ? r.deliveryTime : (r.deliveryTime || 30) + ' mins'}
+                  </span>
+                </div>
+              </div>
+              <div class="card-body p-3 d-flex flex-column justify-content-between flex-grow-1">
+                <div>
+                  <div class="d-flex justify-content-between align-items-center mb-1">
+                    <h6 class="fw-bold text-dark text-truncate mb-0" style="max-width: 175px;">${r.name}</h6>
+                    <span class="card-rating-pill shadow-sm">
+                      <span>${(r.rating || 4.2).toFixed(1)}</span>
+                      <i class="bi bi-star-fill text-warning" style="font-size: 10px;"></i>
+                    </span>
+                  </div>
+                  <div class="my-2">
+                    ${getCuisineBadge(r.cuisineType)}
+                  </div>
+                </div>
+                <div class="d-flex justify-content-between align-items-center small text-muted pt-2 border-top mt-2">
+                  <span class="text-truncate" style="max-width: 140px;"><i class="bi bi-geo-alt-fill text-danger me-1"></i> ${r.area || 'Bengaluru'}</span>
+                  <span class="fw-bold text-dark">₹${r.costForTwo || 400} for two</span>
+                </div>
+              </div>
+            </a>
+          </div>
+        </div>
+      `).join('');
+
+      if (window.init3DCardTilt) {
+        window.init3DCardTilt(grid);
+      }
+    }
+
+    function applyRestaurantFilter(filter) {
+      currentFilter = filter;
+      const pills = document.querySelectorAll('.restaurant-filter-pill');
+      pills.forEach(p => {
+        if (p.getAttribute('data-filter') === filter) {
+          p.classList.add('active');
+        } else {
+          p.classList.remove('active');
+        }
+      });
+      renderFeaturedGrid(currentFeaturedList);
+    }
+
+    // Fast-path instant render from seed dataset (0ms latency, eliminates blank section)
+    try {
+      if (window.FOODWALA_FEATURED_8 && Array.isArray(window.FOODWALA_FEATURED_8)) {
+        renderFeaturedGrid(window.FOODWALA_FEATURED_8);
+      }
+    } catch (err) {
+      console.warn('[index] Fast-path render failed:', err);
+    }
+
+    document.addEventListener('DOMContentLoaded', async () => {
+      // In case seed wasn't ready yet
+      if (window.FOODWALA_FEATURED_8) {
+        renderFeaturedGrid(window.FOODWALA_FEATURED_8);
+      }
+
+      // Load full dataset asynchronously (uses sessionStorage cache when available)
+      if (window.FoodWalaApp) {
+        try {
+          const fullList = await FoodWalaApp.loadRestaurants();
+          if (fullList && fullList.length) {
+            renderFeaturedGrid(fullList);
+          } else if (window.FOODWALA_FEATURED_8) {
+            renderFeaturedGrid(window.FOODWALA_FEATURED_8);
+          }
+        } catch (err) {
+          console.warn('[index] Error loading restaurants, falling back to seed:', err);
+          if (window.FOODWALA_FEATURED_8) {
+            renderFeaturedGrid(window.FOODWALA_FEATURED_8);
+          }
+        }
+      }
+
+      // Setup Restaurant Filter Buttons
+      const filterPills = document.querySelectorAll('.restaurant-filter-pill');
+      filterPills.forEach((btn) => {
+        btn.addEventListener('click', () => {
+          const filter = btn.getAttribute('data-filter');
+          applyRestaurantFilter(filter);
+        });
+      });
+
+      // Setup Autocomplete
+      const searchInput = document.getElementById('hero-search-input');
+      const searchDropdown = document.getElementById('hero-search-dropdown');
+      if (searchInput && searchDropdown && window.FoodWalaSearch) {
+        searchInput.addEventListener('input', (e) => {
+          const q = e.target.value;
+          const suggestions = FoodWalaSearch.getSuggestions(q, 5);
+          if (suggestions.length > 0) {
+            searchDropdown.innerHTML = suggestions.map(s => `
+              <a href="./restaurants.html?q=${encodeURIComponent(s.text)}" class="d-flex align-items-center justify-content-between px-3 py-2 text-decoration-none text-dark border-bottom hover-bg-light">
+                <span class="small fw-semibold"><i class="bi bi-search text-danger me-2"></i>${s.text}</span>
+                <span class="badge bg-light text-muted small">${s.type}</span>
+              </a>
+            `).join('');
+            searchDropdown.style.display = 'block';
+          } else {
+            searchDropdown.style.display = 'none';
+          }
+        });
+
+        document.addEventListener('click', (e) => {
+          if (!searchDropdown.contains(e.target) && e.target !== searchInput) {
+            searchDropdown.style.display = 'none';
+          }
+        });
+      }
+
+    });
+  </script>
+  <script src="./js/animations-3d.js" defer></script>
+  <script src="./js/help-assistance.js" defer></script>
+</body>
+</html>
